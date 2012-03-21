@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+    <php>
+        <includePath>library/:test/</includePath>
+    </php>
+    <testsuites>
+      <testsuite name="QuickPay Payment API">
+        <directory>test/QuickPay/</directory>
+       </testsuite>
+    </testsuites>
+</phpunit>

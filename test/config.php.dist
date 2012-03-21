@@ -1,0 +1,10 @@
+<?php
+
+define('QuickPayID',12345678);
+define('MD5Check','');
+
+// Should normally be no need to change anything below
+define('APIURL',false);
+define('CREDITCARD','4571999999999999');
+define('EXPIRE', '1214');
+define('CVD','123');
