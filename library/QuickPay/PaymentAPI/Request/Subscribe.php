@@ -9,6 +9,8 @@ use QuickPay\PaymentAPI;
 /**
  * Create subscription
  *
+ * NB! subscribe only allowed from a PCI certificed environment
+ *
  * @author Tim Warberg <tlw@interface.dk>, interFace ApS
  *
  * Copyright (C) 2012 Tim Warberg <tlw@interface.dk>, interFace ApS

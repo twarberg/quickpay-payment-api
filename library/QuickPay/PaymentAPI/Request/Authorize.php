@@ -9,7 +9,7 @@ use QuickPay\PaymentAPI;
 /**
  * Authorize transaction request
  *
- * NB! Please be aware that authorize via API require Your environment is PCI certified
+ * NB! authorize only allowed from a PCI certificed environment
  *
  * @author Tim Warberg <tlw@interface.dk>, interFace ApS
  *
