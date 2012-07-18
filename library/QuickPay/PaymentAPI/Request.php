@@ -32,7 +32,7 @@ require_once('Response.php');
 abstract class Request
 {
     const API_VERSION = 4;
-    const API_URL = 'https://secure.tlw.goddard.pil.dk/api'; //'https://secure.quickpay.dk/api';
+    const API_URL = 'https://secure.quickpay.dk/api';
 
     protected $_data;
     protected $_md5check;
