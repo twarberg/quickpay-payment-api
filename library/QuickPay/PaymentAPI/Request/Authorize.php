@@ -35,53 +35,146 @@ use QuickPay\PaymentAPI;
  */
 class Authorize extends PaymentAPI\Request
 {
-    public function __construct($quickpayID, $md5check, $apiUrl = false) {
-        parent::__construct($quickpayID, $md5check, $apiUrl);
+	/**
+	 * Setup API authorize request
+	 *
+	 * @param integer $quickpayID	QuickPay ID (Found in manager)
+	 * @param string  $md5check		QuickPay MD5Check (Found in manager)
+	 * @param boolean $apiUrl		(optional) alternate API url
+	 * @param boolean $verifySSL 	(optional) disable SSL certificate verification
+	 */
+    public function __construct($quickpayID, $md5check, $apiUrl = false, $verifySSL = true) {
+        parent::__construct($quickpayID, $md5check, $apiUrl, $verifySSL);
         $this->_set('msgtype','authorize');
     }
 
+    /**
+     * An unique order number. Must be between 4 and 20 characters long
+     * @param string $ordernumber
+     * @return PaymentAPI\Request\Authorize
+     */
     public function setOrderNumber($ordernumber) {
         $this->_set('ordernumber',$ordernumber);
         return $this;
     }
 
+    /**
+     * Amount in currency's smallest unit. fx. 1.23 DKK is written as 123
+     * @param integer $amount
+     * @return PaymentAPI\Request\Authorize
+     */
     public function setAmount($amount) {
         $this->_set('amount',$amount);
         return $this;
     }
 
+    /**
+     * 3 letter transaction currency (ISO 4217)
+     * @param string $currency
+     * @return PaymentAPI\Request\Authorize
+     */
     public function setCurrency($currency) {
         $this->_set('currency',$currency);
         return $this;
     }
 
+    /**
+     * Enable auto capture.
+     * @param boolean $autocapture True for autocapture
+     * @return PaymentAPI\Request\Authorize
+     */
     public function setAutoCapture($autocapture) {
         $this->_set('autocapture',$autocapture ? '1' : '0');
         return $this;
     }
 
+    /**
+     * (Credit)card number
+     * @param integer $cardnumber
+     * @return PaymentAPI\Request\Authorize
+     */
     public function setCardnumber($cardnumber) {
         $this->_set('cardnumber',$cardnumber);
         return $this;
     }
 
+    /**
+     * (Credit)card expiration date. Format: MMYY
+     * @param string $expdate
+     * @return PaymentAPI\Request\Authorize
+     */
     public function setExpirationDate($expdate) {
         $this->_set('expirationdate', $expdate);
         return $this;
     }
 
+    /**
+     * (Credit)card 3 digit cvd/cvv
+     * @param integer $cvd
+     * @return PaymentAPI\Request\Authorize
+     */
     public function setCVD($cvd) {
         $this->_set('cvd',$cvd);
         return $this;
     }
 
+    /**
+     * Restrict to specific card type(s).
+     * @param string $cardtypelock Comma separated list of locknames
+     * @return PaymentAPI\Request\Authorize
+     */
     public function setCardtypeLock($cardtypelock) {
         $this->_set('cardtypelock',$cardtypelock);
         return $this;
     }
 
+    /**
+     * Allow partial/split capture
+     * @param boolean $split True for split payment
+     * @return PaymentAPI\Request\Authorize
+     */
     public function setSplitpayment($split) {
         $this->_set('splitpayment',$split ? '1' : '0');
+        return $this;
+    }
+
+    /**
+     * Set channel. Used to switch between mobile (Mobilpenge) and creditcard payments
+     * @param string $channel creditcard/mobile
+     * @return PaymentAPI\Request\Authorize
+     */
+    public function setChannel($channel) {
+    	$this->_set('channel', $channel);
+    	return $this;
+    }
+
+    /**
+     * Mobile number. Only relevant when channel=mobile
+     * @param integer $number
+     * @return PaymentAPI\Request\Authorize
+     */
+    public function setMobileNumber($number) {
+    	$this->_set('mobilenumber', $number);
+    	return $this;
+    }
+
+    /**
+     * Description of purchage to be included in purchage confirmation SMS. Keep it at short as possible
+     * @param string $message Short purchage description
+     * @return PaymentAPI\Request\Authorize
+     */
+    public function setSmsMessage($message) {
+    	$this->_set('smsmessage', $message);
+    	return $this;
+    }
+
+    /**
+     * Enable cardhash in response. Card hash is a unique but PCI safe hash ID based on cardnumber.
+     * @param boolean $hash Enable hash?
+     * @return PaymentAPI\Request\Authorize
+     */
+    public function setCardHash($hash) {
+    	$this->_set('cardhash', $hash ? '1' : '0');
         return $this;
     }
 }

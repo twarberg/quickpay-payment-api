@@ -33,26 +33,44 @@ use QuickPay\PaymentAPI;
  */
 class Capture extends PaymentAPI\Request
 {
-    public function __construct($quickpayID, $md5check, $apiUrl = false) {
-        parent::__construct($quickpayID, $md5check, $apiUrl);
+	/**
+	 * Setup API capture request
+	 *
+	 * @param integer $quickpayID	QuickPay ID (Found in manager)
+	 * @param string  $md5check		QuickPay MD5Check (Found in manager)
+	 * @param boolean $apiUrl		(optional) alternate API url
+	 * @param boolean $verifySSL 	(optional) disable SSL certificate verification
+	 */
+    public function __construct($quickpayID, $md5check, $apiUrl = false, $verifySSL = true) {
+        parent::__construct($quickpayID, $md5check, $apiUrl, $verifySSL);
         $this->_set('msgtype','capture');
     }
 
+    /**
+     * Id of transaction
+     * @param integer $tid
+     * @return PaymentAPI\Request\Capture
+     */
     public function setTransaction($tid) {
         $this->_set('transaction', $tid);
         return $this;
     }
 
+    /**
+     * Amount to capture in currency's smallest unit. fx. 1.23 DKK is written as 123
+     * @param integer $amount
+     * @return PaymentAPI\Request\Capture
+     */
     public function setAmount($amount) {
         $this->_set('amount', $amount);
         return $this;
     }
 
-    public function setCurrency($currency) {
-        $this->_set('currency', $currency);
-        return $this;
-    }
-
+    /**
+     * Indicate final capture. Only relevant if split payment is enabled and amount < autorized amount + previously captured
+     * @param boolean $finalize True to finaize
+     * @return PaymentAPI\Request\Capture
+     */
     public function setFinalize($finalize) {
         $this->_set('finalize', $finalize ? '1' : '0');
         return $this;

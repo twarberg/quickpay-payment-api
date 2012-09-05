@@ -31,7 +31,7 @@ require_once('Response.php');
  */
 abstract class Request
 {
-    const API_VERSION = 4;
+    const API_VERSION = 6;
     const API_URL = 'https://secure.quickpay.dk/api';
 
     protected $_data;
@@ -48,7 +48,7 @@ abstract class Request
      * @param string  $md5check   MD5 check key. Is found/generated inside QuickPay Manager
      * @param string $apiUrl      Optional alternate URL for QuickPay Payment API
      */
-    public function __construct($quickpayID, $md5check, $apiUrl = false) {
+    public function __construct($quickpayID, $md5check, $apiUrl = false, $verifySSL = true) {
         $this->_url = is_string($apiUrl) ? $apiUrl : self::API_URL;
         $this->_data = $this->_createInitialData($quickpayID);
         $this->_md5check = $md5check;
@@ -56,10 +56,8 @@ abstract class Request
         $this->_curl = curl_init();
         curl_setopt($this->_curl,CURLOPT_URL,$this->_url);
         curl_setopt($this->_curl,CURLOPT_RETURNTRANSFER,true);
-        curl_setopt($this->_curl,CURLOPT_AUTOREFERER,true); // This make sure will follow redirects
-        curl_setopt($this->_curl,CURLOPT_FOLLOWLOCATION,true); // This too
         curl_setopt($this->_curl,CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($this->_curl,CURLOPT_SSL_VERIFYPEER, false); // Don't verify ssl certificate
+        curl_setopt($this->_curl,CURLOPT_SSL_VERIFYPEER, $verifySSL);
         curl_setopt($this->_curl,CURLOPT_POST,true);
     }
 
@@ -126,6 +124,7 @@ abstract class Request
     protected function _createInitialData($quickpayID) {
         return array(
             'protocol' => self::API_VERSION,
+            'channel' => 'creditcard',
             'msgtype' => null,
             'merchant' => $quickpayID,
             'ordernumber' => null,
@@ -135,11 +134,15 @@ abstract class Request
             'cardnumber' => null,
             'expirationdate' => null,
             'cvd' => null,
+            'mobilenumber' => null,
+            'smsmessage' => null,
             'cardtypelock' => null,
             'transaction' => null,
             'description' => null,
+            'group' => null,
             'splitpayment' => null,
             'finalize' => null,
+            'cardhash' => null,
             'testmode' => '0',
             'fraud_remote_addr' => null,
             'fraud_http_accept' => null,

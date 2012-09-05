@@ -35,41 +35,84 @@ use QuickPay\PaymentAPI;
  */
 class Subscribe extends PaymentAPI\Request
 {
-    public function __construct($quickpayID, $md5check, $apiUrl = false) {
-        parent::__construct($quickpayID, $md5check, $apiUrl);
+	/**
+	 * Setup API subscription request
+	 *
+	 * @param integer $quickpayID	QuickPay ID (Found in manager)
+	 * @param string  $md5check		QuickPay MD5Check (Found in manager)
+	 * @param boolean $apiUrl		(optional) alternate API url
+	 * @param boolean $verifySSL 	(optional) disable SSL certificate verification
+	 */
+    public function __construct($quickpayID, $md5check, $apiUrl = false, $verifySSL = true) {
+        parent::__construct($quickpayID, $md5check, $apiUrl, $verifySSL);
         $this->_set('msgtype','subscribe');
     }
 
+    /**
+     * An unique order number. Must be between 4 and 20 characters long
+     * @param string $ordernumber
+     * @return PaymentAPI\Request\Subscribe
+     */
     public function setOrderNumber($ordernumber) {
         $this->_set('ordernumber',$ordernumber);
         return $this;
     }
 
+    /**
+     * 3 letter transaction currency (ISO 4217)
+     * @param string $currency
+     * @return PaymentAPI\Request\Subscribe
+     */
     public function setCurrency($currency) {
         $this->_set('currency',$currency);
         return $this;
     }
 
+    /**
+     * (Credit)card number
+     * @param integer $cardnumber
+     * @return PaymentAPI\Request\Subscribe
+     */
     public function setCardnumber($cardnumber) {
         $this->_set('cardnumber',$cardnumber);
         return $this;
     }
 
+    /**
+     * (Credit)card expiration date. Format: MMYY
+     * @param string $expdate
+     * @return PaymentAPI\Request\Subscribe
+     */
     public function setExpirationDate($expdate) {
         $this->_set('expirationdate', $expdate);
         return $this;
     }
 
+    /**
+     * (Credit)card 3 digit cvd/cvv
+     * @param integer $cvd
+     * @return PaymentAPI\Request\Subscribe
+     */
     public function setCVD($cvd) {
         $this->_set('cvd',$cvd);
         return $this;
     }
 
+    /**
+     * Restrict to specific card type(s).
+     * @param string $cardtypelock Comma separated list of locknames
+     * @return PaymentAPI\Request\Subscribe
+     */
     public function setCardtypeLock($cardtypelock) {
         $this->_set('cardtypelock',$cardtypelock);
         return $this;
     }
 
+    /**
+     * Subscription description
+     * @param string $description
+     * @return PaymentAPI\Request\Subscribe
+     */
     public function setDescription($description) {
         $this->_set('description', $description);
         return $this;

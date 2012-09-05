@@ -106,6 +106,7 @@ class Response
             'transaction' => (int)$xml->transaction,
             'cardtype' => (string)$xml->cardtype,
             'cardnumber' => (string)$xml->cardnumber,
+            'cardhash' => (string)$xml->cardhash,
             'cardexpire' => (string)$xml->cardexpire,
             'splitpayment' => (int)$xml->splitpayment,
             'fraudprobability' => (string)$xml->fraudprobability,

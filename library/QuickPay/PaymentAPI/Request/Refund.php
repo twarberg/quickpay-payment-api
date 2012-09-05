@@ -33,16 +33,34 @@ use QuickPay\PaymentAPI;
  */
 class Refund extends PaymentAPI\Request
 {
-    public function __construct($quickpayID, $md5check, $apiUrl = false) {
-        parent::__construct($quickpayID, $md5check, $apiUrl);
+	/**
+	 * Setup API refund request to refund previously captured amount
+	 *
+	 * @param integer $quickpayID	QuickPay ID (Found in manager)
+	 * @param string  $md5check		QuickPay MD5Check (Found in manager)
+	 * @param boolean $apiUrl		(optional) alternate API url
+	 * @param boolean $verifySSL 	(optional) disable SSL certificate verification
+	 */
+    public function __construct($quickpayID, $md5check, $apiUrl = false, $verifySSL = true) {
+        parent::__construct($quickpayID, $md5check, $apiUrl, $verifySSL);
         $this->_set('msgtype','refund');
     }
 
+    /**
+     * Id of captured transaction
+     * @param integer $tid
+     * @return PaymentAPI\Request\Refund
+     */
     public function setTransaction($tid) {
         $this->_set('transaction', $tid);
         return $this;
     }
 
+    /**
+     * Refund amount in currency's smallest unit. fx. 1.23 DKK is written as 123
+     * @param integer $amount
+     * @return PaymentAPI\Request\Refund
+     */
     public function setAmount($amount) {
         $this->_set('amount', $amount);
         return $this;

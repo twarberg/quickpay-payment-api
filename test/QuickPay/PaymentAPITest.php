@@ -11,9 +11,9 @@ require_once 'QuickPay/PaymentAPI/Request/Recurring.php';
 class PaymentAPITest extends PHPUnit_Framework_TestCase
 {
     protected function stdAuthorize() {
-        $auth = new \QuickPay\PaymentAPI\Request\Authorize(QuickPayID,MD5Check,APIURL);
-        $response = $auth->setAPIKey('G358rd247Eu6L979jY3U66Ng741n5FbPqkehIK8lmD4HfXtTwQ8233BcpaRW8y6x')
-            ->setOrderNumber('A'.time())
+        $auth = new \QuickPay\PaymentAPI\Request\Authorize(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $response = $auth->setAPIKey(APIKEY)
+            ->setOrderNumber('A'. $this->createOrdernumber())
             ->setAmount(234)
             ->setCurrency('DKK')
             ->setCardnumber(CREDITCARD)
@@ -23,15 +23,15 @@ class PaymentAPITest extends PHPUnit_Framework_TestCase
             ->setTestmode(true)
             ->send();
 
-        $this->assertEquals(true, $response->isValid());
-        $this->assertEquals(true,$response->isSuccess());
+        $this->assertEquals(true, $response->isValid(), 'Authorize not valid');
+        $this->assertEquals(true, $response->isSuccess(), 'Authorize not successful');
         return $response;
     }
 
     protected function stdSubscribe() {
-        $auth = new \QuickPay\PaymentAPI\Request\Subscribe(QuickPayID,MD5Check,APIURL);
-        $response = $auth->setAPIKey('G358rd247Eu6L979jY3U66Ng741n5FbPqkehIK8lmD4HfXtTwQ8233BcpaRW8y6x')
-            ->setOrderNumber('S'.time())
+        $auth = new \QuickPay\PaymentAPI\Request\Subscribe(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $response = $auth->setAPIKey(APIKEY)
+            ->setOrderNumber('S'.$this->createOrdernumber())
             ->setCurrency('DKK')
             ->setCardnumber(4571999999999999)
             ->setExpirationDate(1212)
@@ -41,23 +41,44 @@ class PaymentAPITest extends PHPUnit_Framework_TestCase
             ->setTestmode(true)
             ->send();
 
-        $this->assertEquals(true, $response->isValid());
-        $this->assertEquals(true,$response->isSuccess());
+        $this->assertEquals(true, $response->isValid(), 'Subscribe not valid');
+        $this->assertEquals(true,$response->isSuccess(), 'Subscribe not successful');
         return $response;
     }
 
     protected function stdCapture() {
         $auth = $this->stdAuthorize();
-        $capture = new \QuickPay\PaymentAPI\Request\Capture(QuickPayID,MD5Check,APIURL);
-        $response = $capture->setAPIKey('G358rd247Eu6L979jY3U66Ng741n5FbPqkehIK8lmD4HfXtTwQ8233BcpaRW8y6x')
+        $capture = new \QuickPay\PaymentAPI\Request\Capture(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $response = $capture->setAPIKey(APIKEY)
             ->setTransaction($auth->get('transaction'))
             ->setAmount(234)
-            ->setCurrency('DKK')
             ->send();
 
-        $this->assertEquals(true, $response->isValid());
-        $this->assertEquals(true,$response->isSuccess());
+        $this->assertEquals(true, $response->isValid(), 'Capture not valid');
+        $this->assertEquals(true, $response->isSuccess(), 'Capture not successful');
         return $response;
+    }
+
+    public function testAuthorize() {
+    	$this->stdAuthorize();
+    }
+
+    public function testCardHashAuthorize() {
+    	$auth = new \QuickPay\PaymentAPI\Request\Authorize(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $response = $auth->setAPIKey(APIKEY)
+            ->setOrderNumber('A'. $this->createOrdernumber())
+            ->setAmount(234)
+            ->setCurrency('DKK')
+            ->setCardnumber(CREDITCARD)
+            ->setExpirationDate(EXPIRE)
+            ->setCVD(CVD)
+            ->setCardtypeLock('dankort')
+            ->setCardHash(true)
+            ->setTestmode(true)
+            ->send();
+
+        $this->assertEquals(true, $response->isValid(), 'Authorize not valid');
+        $this->assertEquals(true, $response->isSuccess(), 'Authorize not successful');
     }
 
     public function testCapture() {
@@ -66,39 +87,45 @@ class PaymentAPITest extends PHPUnit_Framework_TestCase
 
     public function testCancel() {
         $auth = $this->stdAuthorize();
-        $cancel = new \QuickPay\PaymentAPI\Request\Cancel(QuickPayID,MD5Check,APIURL);
-        $response = $cancel->setAPIKey('G358rd247Eu6L979jY3U66Ng741n5FbPqkehIK8lmD4HfXtTwQ8233BcpaRW8y6x')
+        $cancel = new \QuickPay\PaymentAPI\Request\Cancel(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $response = $cancel->setAPIKey(APIKEY)
             ->setTransaction($auth->get('transaction'))
             ->send();
 
-        $this->assertEquals(true, $response->isValid());
-        $this->assertEquals(true,$response->isSuccess());
+        $this->assertEquals(true, $response->isValid(), 'Cancel not valid');
+        $this->assertEquals(true, $response->isSuccess(), 'Cancel not successful');
     }
 
     public function testRefund() {
         $capture = $this->stdCapture();
-        $refund = new \QuickPay\PaymentAPI\Request\Refund(QuickPayID,MD5Check,APIURL);
-        $response = $refund->setAPIKey('G358rd247Eu6L979jY3U66Ng741n5FbPqkehIK8lmD4HfXtTwQ8233BcpaRW8y6x')
+        $refund = new \QuickPay\PaymentAPI\Request\Refund(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $response = $refund->setAPIKey(APIKEY)
             ->setTransaction($capture->get('transaction'))
             ->setAmount(234)
             ->send();
 
-        $this->assertEquals(true, $response->isValid());
-        $this->assertEquals(true,$response->isSuccess());
+        $this->assertEquals(true, $response->isValid(), 'Response not valid');
+        $this->assertEquals(true, $response->isSuccess(), 'Response not success');
     }
 
     public function testRecurring() {
         $subscribe = $this->stdSubscribe();
-        $recurring =new \QuickPay\PaymentAPI\Request\Recurring(QuickPayID,MD5Check,APIURL);
-        $response = $recurring->setAPIKey('G358rd247Eu6L979jY3U66Ng741n5FbPqkehIK8lmD4HfXtTwQ8233BcpaRW8y6x')
+        $recurring =new \QuickPay\PaymentAPI\Request\Recurring(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $response = $recurring->setAPIKey(APIKEY)
             ->setTransaction($subscribe->get('transaction'))
-            ->setOrderNumber('R'.time())
+            ->setOrderNumber('R'.$this->createOrdernumber())
             ->setAmount(234)
             ->setCurrency('DKK')
             ->setAutoCapture(true)
             ->send();
 
-        $this->assertEquals(true, $response->isValid());
-        $this->assertEquals(true,$response->isSuccess());
+        $this->assertEquals(true, $response->isValid(), 'Recurring not valid');
+        $this->assertEquals(true, $response->isSuccess(), 'Recurring not successful');
+    }
+
+    protected function createOrdernumber()
+    {
+        list($usec, $sec) = explode(" ", microtime());
+        return preg_replace('/\./', '', ((float)$usec + (float)$sec));
     }
 }

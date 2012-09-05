@@ -31,33 +31,26 @@ require_once('Authorize.php');
  */
 class Recurring extends Authorize
 {
-    public function __construct($quickpayID, $md5check, $apiUrl = false) {
-        parent::__construct($quickpayID, $md5check, $apiUrl);
+	/**
+	 * Setup API recurring request. Recurring is used to withdraw money on a subscription
+	 *
+	 * @param integer $quickpayID	QuickPay ID (Found in manager)
+	 * @param string  $md5check		QuickPay MD5Check (Found in manager)
+	 * @param boolean $apiUrl		(optional) alternate API url
+	 * @param boolean $verifySSL 	(optional) disable SSL certificate verification
+	 */
+    public function __construct($quickpayID, $md5check, $apiUrl = false, $verifySSL = true) {
+        parent::__construct($quickpayID, $md5check, $apiUrl, $verifySSL);
         $this->_set('msgtype','recurring');
     }
 
+    /**
+     * Subscription transaction Id
+     * @param integer $tid
+     * @return PaymentAPI\Request\Recurring
+     */
     public function setTransaction($tid) {
         $this->_set('transaction',$tid);
-        return $this;
-    }
-
-    public function setOrderNumber($ordernumber) {
-        $this->_set('ordernumber',$ordernumber);
-        return $this;
-    }
-
-    public function setAmount($amount) {
-        $this->_set('amount',$amount);
-        return $this;
-    }
-
-    public function setCurrency($currency) {
-        $this->_set('currency',$currency);
-        return $this;
-    }
-
-    public function setAutoCapture($autocapture) {
-        $this->_set('autocapture',$autocapture ? '1' : '0');
         return $this;
     }
 }

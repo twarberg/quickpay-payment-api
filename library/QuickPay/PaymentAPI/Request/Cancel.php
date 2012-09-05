@@ -33,11 +33,25 @@ use QuickPay\PaymentAPI;
  */
 class Cancel extends PaymentAPI\Request
 {
-    public function __construct($quickpayID, $md5check, $apiUrl = false) {
-        parent::__construct($quickpayID, $md5check, $apiUrl);
+
+	/**
+	 * Setup API cancel request
+	 *
+	 * @param integer $quickpayID	QuickPay ID (Found in manager)
+	 * @param string  $md5check		QuickPay MD5Check (Found in manager)
+	 * @param boolean $apiUrl		(optional) alternate API url
+	 * @param boolean $verifySSL 	(optional) disable SSL certificate verification
+	 */
+    public function __construct($quickpayID, $md5check, $apiUrl = false, $verifySSL = true) {
+        parent::__construct($quickpayID, $md5check, $apiUrl, $verifySSL);
         $this->_set('msgtype','cancel');
     }
 
+    /**
+     * ID of transaction to cancel
+     * @param integer $tid
+     * @return PaymentAPI\Request\Cancel
+     */
     public function setTransaction($tid) {
         $this->_set('transaction', $tid);
         return $this;

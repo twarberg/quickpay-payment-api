@@ -14,7 +14,7 @@ class Response
     public function get($key) {
     	return $this->_response[$key];
     }
-      
+
 
     public function isSuccess() {
         return $this->_response['qpstat'] == '000';
@@ -47,6 +47,7 @@ class Response
             'transaction' => isset($post['transaction']) ? $post['transaction'] : null,
             'cardtype' => isset($post['cardtype']) ? $post['cardtype'] : null,
             'cardnumber' => isset($post['cardnumber']) ? $post['cardnumber'] : null,
+            'cardhash' => isset($post['cardhash']) ? $post['cardhash'] : null,
             'cardexpire' => isset($post['cardexpire']) ? $post['cardexpire'] : null,
             'splitpayment' => isset($post['splitpayment']) ? $post['splitpayment'] : null,
             'fraudprobability' => isset($post['fraudprobability']) ? $post['fraudprobability'] : null,
