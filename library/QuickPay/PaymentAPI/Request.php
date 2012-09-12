@@ -86,6 +86,7 @@ abstract class Request
     /**
      * Send request to QuickPay Payment API
      *
+     * @throws QuickPay\PaymentAPI\Exception If unable to parse response
      * @return Response Response from QuickPay
      */
     public function send() {

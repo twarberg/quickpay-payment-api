@@ -2,6 +2,8 @@
 
 namespace QuickPay\PaymentAPI;
 
+require_once('Exception.php');
+
 /**
  * QuickPay Response
  *
@@ -33,10 +35,20 @@ class Response
     protected $_xml;
     protected $_md5check;
 
+    /**
+     * QuickPay Response abstraction
+     * @param string $rawResponse QuickPay response body
+     * @param string $md5check    md5sectet string
+     * @throws QuickPay\PaymentAPI\Exception If unable to parse response
+     */
     public function __construct($rawResponse, $md5check)
     {
         $this->_md5check = $md5check;
-        $this->_response = $this->_createResponseData(new \SimpleXMLElement($rawResponse));
+        try {
+        	$this->_response = $this->_createResponseData(new \SimpleXMLElement($rawResponse));
+        } catch (\Exception $e) {
+        	throw new Exception("Error parsing response. Error: {$e->getMessage()}. Response: {$rawResponse}");
+        }
     }
 
     /**
