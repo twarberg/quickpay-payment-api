@@ -31,6 +31,32 @@ require_once('Exception.php');
  */
 class Response
 {
+
+	protected static $__md5checkFields = array(
+		'msgtype',
+		'ordernumber',
+		'amount',
+		'currency',
+		'time',
+		'state',
+		'qpstat',
+		'qpstatmsg',
+		'chstat',
+		'chstatmsg',
+		'merchant',
+		'merchantemail',
+		'transaction',
+		'cardtype',
+		'cardnumber',
+		'cardhash',
+		'cardexpire',
+		'splitpayment',
+		'fraudprobability',
+		'fraudremarks',
+		'fraudreport',
+		'fee'
+		);
+
     protected $_response;
     protected $_xml;
     protected $_md5check;
@@ -93,12 +119,12 @@ class Response
      */
     public function isValid() {
         $md5string = '';
-        foreach($this->_response as $key => $value) {
-            if($key != 'md5check') {
-                $md5string .= $value;
+        foreach(static::$__md5checkFields as $key) {
+        	if(array_key_exists($key,$this->_response)) {
+                $md5string .= $this->_response[$key];
             }
         }
-        return $this->_response['md5check'] !== md5($md5string . $this->_md5check);
+        return strcmp($this->_response['md5check'],md5($md5string . $this->_md5check)) === 0;
     }
 
     private function _createResponseData(\SimpleXMLElement $xml) {
@@ -120,7 +146,7 @@ class Response
             'cardnumber' => (string)$xml->cardnumber,
             'cardhash' => (string)$xml->cardhash,
             'cardexpire' => (string)$xml->cardexpire,
-            'splitpayment' => (int)$xml->splitpayment,
+            'splitpayment' => !empty($xml->splitpayment) ? (int)$xml->splitpayment : '',
             'fraudprobability' => (string)$xml->fraudprobability,
             'fraudremarks' => (string)$xml->fraudremarks,
             'fraudreport' => (string)$xml->fraudreport,
