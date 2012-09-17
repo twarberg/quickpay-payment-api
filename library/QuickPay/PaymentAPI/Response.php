@@ -32,30 +32,29 @@ require_once('Exception.php');
 class Response
 {
 
-	protected static $__md5checkFields = array(
-		'msgtype',
-		'ordernumber',
-		'amount',
-		'currency',
-		'time',
-		'state',
-		'qpstat',
-		'qpstatmsg',
-		'chstat',
-		'chstatmsg',
-		'merchant',
-		'merchantemail',
-		'transaction',
-		'cardtype',
-		'cardnumber',
-		'cardhash',
-		'cardexpire',
-		'splitpayment',
-		'fraudprobability',
-		'fraudremarks',
-		'fraudreport',
-		'fee'
-		);
+    protected static $__md5checkFields = array(
+        'msgtype',
+        'ordernumber',
+        'amount',
+        'currency',
+        'time',
+        'state',
+        'qpstat',
+        'qpstatmsg',
+        'chstat',
+        'chstatmsg',
+        'merchant',
+        'merchantemail',
+        'transaction',
+        'cardtype',
+        'cardnumber',
+        'cardhash',
+        'cardexpire',
+        'splitpayment',
+        'fraudprobability',
+        'fraudremarks',
+        'fraudreport'
+        );
 
     protected $_response;
     protected $_xml;
@@ -71,9 +70,9 @@ class Response
     {
         $this->_md5check = $md5check;
         try {
-        	$this->_response = $this->_createResponseData(new \SimpleXMLElement($rawResponse));
+            $this->_response = $this->_createResponseData(new \SimpleXMLElement($rawResponse));
         } catch (\Exception $e) {
-        	throw new Exception("Error parsing response. Error: {$e->getMessage()}. Response: {$rawResponse}");
+            throw new Exception("Error parsing response. Error: {$e->getMessage()}. Response: {$rawResponse}");
         }
     }
 
@@ -120,7 +119,7 @@ class Response
     public function isValid() {
         $md5string = '';
         foreach(static::$__md5checkFields as $key) {
-        	if(array_key_exists($key,$this->_response)) {
+            if(array_key_exists($key,$this->_response)) {
                 $md5string .= $this->_response[$key];
             }
         }
@@ -129,28 +128,28 @@ class Response
 
     private function _createResponseData(\SimpleXMLElement $xml) {
         return array(
-            'msgtype' => (string)$xml->msgtype,
-            'ordernumber' => (string)$xml->ordernumber,
-            'amount' => (int)$xml->amount,
-            'currency' => (string)$xml->currency,
-            'time' => (string)$xml->time,
-            'state' => (string)$xml->state,
-            'qpstat' => (string)$xml->qpstat,
-            'qpstatmsg' => (string)$xml->qpstatmsg,
-            'chstat' => (string)$xml->chstat,
-            'chstatmsg' => (string)$xml->chstatmsg,
-            'merchant' => (string)$xml->merchant,
-            'merchantemail' => (string)$xml->merchantemail,
-            'transaction' => (int)$xml->transaction,
-            'cardtype' => (string)$xml->cardtype,
-            'cardnumber' => (string)$xml->cardnumber,
-            'cardhash' => (string)$xml->cardhash,
-            'cardexpire' => (string)$xml->cardexpire,
-            'splitpayment' => !empty($xml->splitpayment) ? (int)$xml->splitpayment : '',
-            'fraudprobability' => (string)$xml->fraudprobability,
-            'fraudremarks' => (string)$xml->fraudremarks,
-            'fraudreport' => (string)$xml->fraudreport,
-            'md5check'=> (string)$xml->md5check
+            'msgtype'           => (string)$xml->msgtype,
+            'ordernumber'       => (string)$xml->ordernumber,
+            'amount'            => $xml->amount != '' ?(int)$xml->amount : '',
+            'currency'          => (string)$xml->currency,
+            'time'              => (string)$xml->time,
+            'state'             => (string)$xml->state,
+            'qpstat'            => (string)$xml->qpstat,
+            'qpstatmsg'         => (string)$xml->qpstatmsg,
+            'chstat'            => (string)$xml->chstat,
+            'chstatmsg'         => (string)$xml->chstatmsg,
+            'merchant'          => (string)$xml->merchant,
+            'merchantemail'     => (string)$xml->merchantemail,
+            'transaction'       => $xml->transaction != '' ? (int)$xml->transaction : '',
+            'cardtype'          => (string)$xml->cardtype,
+            'cardnumber'        => (string)$xml->cardnumber,
+            'cardhash'          => (string)$xml->cardhash,
+            'cardexpire'        => (string)$xml->cardexpire,
+            'splitpayment'      => $xml->splitpayment != '' ? (int)$xml->splitpayment : '',
+            'fraudprobability'  => (string)$xml->fraudprobability,
+            'fraudremarks'      => (string)$xml->fraudremarks,
+            'fraudreport'       => (string)$xml->fraudreport,
+            'md5check'          => (string)$xml->md5check
         );
     }
 }

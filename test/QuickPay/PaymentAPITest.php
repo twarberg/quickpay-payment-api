@@ -123,6 +123,23 @@ class PaymentAPITest extends PHPUnit_Framework_TestCase
         $this->assertEquals(true, $response->isSuccess(), 'Recurring not successful');
     }
 
+    public function testInvalidRequest() {
+    	$auth = new \QuickPay\PaymentAPI\Request\Authorize(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $response = $auth->setAPIKey(APIKEY)
+            ->setOrderNumber('1')
+            ->setAmount(234)
+            ->setCurrency('DKK')
+            ->setCardnumber(CREDITCARD)
+            ->setExpirationDate(EXPIRE)
+            ->setCVD(CVD)
+            ->setCardtypeLock('dankort')
+            ->setTestmode(true)
+            ->send();
+
+        $this->assertTrue($response->isValid(), 'Authorize response not valid');
+        $this->assertFalse($response->isSuccess(), 'Authorize successful');
+    }
+
     protected function createOrdernumber()
     {
         list($usec, $sec) = explode(" ", microtime());
