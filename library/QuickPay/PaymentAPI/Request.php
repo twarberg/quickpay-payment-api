@@ -31,7 +31,7 @@ require_once('Response.php');
  */
 abstract class Request
 {
-    const API_VERSION = 6;
+    const API_VERSION = 7;
     const API_URL = 'https://secure.quickpay.dk/api';
 
     protected $_data;
@@ -137,6 +137,7 @@ abstract class Request
             'cvd' => null,
             'mobilenumber' => null,
             'smsmessage' => null,
+            'acquirers' => null,
             'cardtypelock' => null,
             'transaction' => null,
             'description' => null,

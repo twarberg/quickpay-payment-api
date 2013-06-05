@@ -177,4 +177,9 @@ class Authorize extends PaymentAPI\Request
     	$this->_set('cardhash', $hash ? '1' : '0');
         return $this;
     }
+
+    public function setAcquirers($acquirers) {
+        $this->_set('acquirers', $acquirers);
+        return $this;
+    }
 }
