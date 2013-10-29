@@ -59,6 +59,16 @@ class Subscribe extends PaymentAPI\Request
     }
 
     /**
+     * Amount in currency's smallest unit. fx. 1.23 DKK is written as 123
+     * @param integer $amount
+     * @return PaymentAPI\Request\Subscribe
+     */
+    public function setAmount($amount) {
+        $this->_set('amount',$amount);
+        return $this;
+    }
+
+    /**
      * 3 letter transaction currency (ISO 4217)
      * @param string $currency
      * @return PaymentAPI\Request\Subscribe

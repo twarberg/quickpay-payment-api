@@ -32,9 +32,10 @@ class PaymentAPITest extends PHPUnit_Framework_TestCase
         $auth = new \QuickPay\PaymentAPI\Request\Subscribe(QuickPayID,MD5Check,APIURL,VERIFYSSL);
         $response = $auth->setAPIKey(APIKEY)
             ->setOrderNumber('S'.$this->createOrdernumber())
+            ->setAmount(234)
             ->setCurrency('DKK')
-            ->setCardnumber(4571999999999999)
-            ->setExpirationDate(1212)
+            ->setCardnumber(CREDITCARD)
+            ->setExpirationDate(EXPIRE)
             ->setCVD(123)
             ->setCardtypeLock('dankort')
             ->setDescription('interFace API Client test')
