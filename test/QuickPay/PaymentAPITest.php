@@ -80,6 +80,27 @@ class PaymentAPITest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(true, $response->isValid(), 'Authorize not valid');
         $this->assertEquals(true, $response->isSuccess(), 'Authorize not successful');
+        $this->assertTrue(strlen($response->get('cardhash')) > 0);
+    }
+
+    public function testCardHashSubscribe() {
+        $auth = new \QuickPay\PaymentAPI\Request\Subscribe(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $response = $auth->setAPIKey(APIKEY)
+            ->setOrderNumber('S'.$this->createOrdernumber())
+            ->setAmount(234)
+            ->setCurrency('DKK')
+            ->setCardnumber(CREDITCARD)
+            ->setExpirationDate(EXPIRE)
+            ->setCVD(123)
+            ->setCardtypeLock('dankort')
+            ->setDescription('interFace API Client test')
+            ->setCardHash(true)
+            ->setTestmode(true)
+            ->send();
+
+        $this->assertEquals(true, $response->isValid(), 'Subscribe not valid');
+        $this->assertEquals(true,$response->isSuccess(), 'Subscribe not successful');
+        $this->assertTrue(strlen($response->get('cardhash')) > 0);
     }
 
     public function testCapture() {
