@@ -127,4 +127,14 @@ class Subscribe extends PaymentAPI\Request
         $this->_set('description', $description);
         return $this;
     }
+
+    /**
+     * Enable cardhash in response. Card hash is a unique but PCI safe hash ID based on cardnumber.
+     * @param boolean $hash Enable hash?
+     * @return PaymentAPI\Request\Subscribe
+     */
+    public function setCardHash($hash) {
+        $this->_set('cardhash', $hash ? '1' : '0');
+        return $this;
+    }
 }
